@@ -1,0 +1,4 @@
+*.pem
+*.key
+gcp-cicd
+gcp-cicd.pub
