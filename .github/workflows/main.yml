@@ -1,0 +1,25 @@
+name: Deploy Flask App to GCP
+
+on:
+  workflow_dispatch:  # manual trigger
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to GCP VM via SSH
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          host: ${{ secrets.GCP_HOST }}
+          username: ${{ secrets.GCP_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            docker stop flask-app || true
+            docker rm flask-app || true
+            docker rmi flask-app || true
+            rm -rf containerized-flask-cicd
+            git clone https://github.com/${{ github.repository }}.git containerized-flask-cicd
+            cd containerized-flask-cicd
+            docker build -t flask-app .
+            docker run -d -p 5000:5000 --name flask-app flask-app
