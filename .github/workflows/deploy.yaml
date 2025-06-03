@@ -15,11 +15,11 @@ jobs:
         username: ${{ secrets.GCP_USER }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         script: |
-          sudo docker stop flask-app || true
-          sudo docker rm flask-app || true
-          sudo docker rmi flask-app || true
-          rm -rf containerized-flask-cicd
-          git clone https://github.com/${{ github.repository }}.git containerized-flask-cicd
-          cd containerized-flask-cicd
-          sudo docker build -t flask-app .
-          sudo docker run -d -p 5000:5000 --name flask-app flask-app
+           docker stop flask-app || true
+           docker rm flask-app || true
+           docker rmi flask-app || true
+           rm -rf containerized-flask-cicd
+           git clone https://github.com/${{ github.repository }}.git containerized-flask-cicd
+           cd containerized-flask-cicd
+           docker build -t flask-app .
+            docker run -d -p 5000:5000 --name flask-app flask-app
