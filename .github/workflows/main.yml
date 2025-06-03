@@ -45,7 +45,7 @@ jobs:
           docker rm flask-app || true
           docker rmi flask-app || true
           rm -rf containerized-flask-cicd
-          https://github.com/tech0priyanshu/Starter-Flask-App.git 
+          git clone https://github.com/tech0priyanshu/Starter-Flask-App.git 
           cd Starter\ Flask\ App/
           docker build -t flask-app .
           docker run -d -p 5000:5000 --name flask-app flask-app
