@@ -41,7 +41,9 @@ jobs:
         run: ssh -tt -o StrictHostKeyChecking=no -i key.pem ${{ secrets.GCP_USER }}@${{ secrets.GCP_HOST }} "docker --version"
         script: |
           echo "🚀 Starting deployment..."
-          git clone https://github.com/tech0priyanshu/Starter-Flask-App.git 
-          cd Starter\ Flask\ App/
-          docker build . --file Dockerfile --tag my-image-name:$(date +%s)
-          docker run -d -p 5000:5000 --name flask-app flask-app
+          [ -d "Starter-Flask-App" ] || git clone https://github.com/tech0priyanshu/Starter-Flask-App.git
+          cd Starter-Flask-App || exit 1
+          TAG="flask-app:$(date +%s)"
+          docker build -t $TAG .
+          docker rm -f flask-app 2>/dev/null || true
+          docker run -d -p 5000:5000 --name flask-app $TAG
