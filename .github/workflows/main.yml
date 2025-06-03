@@ -8,11 +8,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Print debug info (don't leak secrets)
+        run: |
+          echo "Checking if secrets are set..."
+          if [ -z "${{ secrets.GCP_HOST }}" ]; then echo "❌ GCP_HOST is EMPTY"; else echo "✅ GCP_HOST is set"; fi
+          if [ -z "${{ secrets.GCP_USER }}" ]; then echo "❌ GCP_USER is EMPTY"; else echo "✅ GCP_USER is set"; fi
+          if [ -z "${{ secrets.SSH_PRIVATE_KEY }}" ]; then echo "❌ SSH_PRIVATE_KEY is EMPTY"; else echo "✅ SSH_PRIVATE_KEY is set"; fi
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v0.1.6
         with:
-          host: echo ${{ secrets.GCP_HOST }} 
-          username: echo ${{ secrets.GCP_USER }}
-          key: echo  ${{ secrets.SSH_PRIVATE_KEY }}
+          host: ${{ secrets.GCP_HOST }}
+          username: ${{ secrets.GCP_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            echo "SSH connected. Deploying..."
+            echo "✅ SSH connected! Running deployment..."
+            docker ps -a || echo "Docker might not be installed yet"
