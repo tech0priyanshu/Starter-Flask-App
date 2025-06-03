@@ -38,6 +38,7 @@ jobs:
         host: ${{ secrets.GCP_HOST }}
         username: ${{ secrets.GCP_USER }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
+        run: ssh -tt -o StrictHostKeyChecking=no -i key.pem ${{ secrets.GCP_USER }}@${{ secrets.GCP_HOST }} "docker --version"
         script: |
           echo "🚀 Starting deployment..."
           docker stop flask-app || true
